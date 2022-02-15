@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class BallControll : MonoBehaviour
 {
+    // Based on https://www.youtube.com/watch?v=Q-_J9S6NaC0&t=381s&ab_channel=MuddyWolf
     public float power = 10f;
     public float maxDrag = 5f;
     public Rigidbody2D rb;
     public LineRenderer lr;
 
     Vector3 dragStartPos;
+    Vector3 objectStartPos;
     Touch touch;
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.touchCount > 0)
+        if(Input.touchCount > 0 && rb.velocity.magnitude <= .01f)
         {
             touch = Input.GetTouch(0);
 
@@ -36,16 +38,17 @@ public class BallControll : MonoBehaviour
 
     void DragStart()
     {
+        objectStartPos = gameObject.transform.position;
         dragStartPos = Camera.main.ScreenToWorldPoint(touch.position);
         dragStartPos.z = 0f;
         lr.positionCount = 1;
-        lr.SetPosition(0, dragStartPos);
+        lr.SetPosition(0, objectStartPos);
     }
 
     void Dragging()
     {
         Vector3 draggingPos = Camera.main.ScreenToWorldPoint(touch.position);
-        dragStartPos.z = 0f;
+        draggingPos.z = 0f;
         lr.positionCount = 2;
         lr.SetPosition(1, draggingPos);
     }
